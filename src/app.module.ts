@@ -7,10 +7,13 @@ import { ConfigModule } from '@nestjs/config';
 
 
 @Module({
-  imports: [UserModule, RoleModule, ConfigModule.forRoot({
-    isGlobal:true
-  })],
+  imports: [
+    UserModule,
+    RoleModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    })],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

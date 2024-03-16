@@ -9,6 +9,6 @@ async function bootstrap() {
     origin:"*"
   })
   app.use(express.static("."))
-  await app.listen(8000);
+  await app.listen(3001);
 }
 bootstrap();
