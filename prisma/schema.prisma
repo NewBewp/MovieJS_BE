@@ -18,7 +18,7 @@ model user {
   first_name   String?   @db.VarChar(255)
   last_name    String?   @db.VarChar(255)
   phone_number String?   @db.VarChar(255)
-  email        String?   @db.VarChar(255)
+  email        String    @unique(map: "email") @db.VarChar(255)
   address      String?   @db.VarChar(255)
   gender       String?   @db.VarChar(20)
   daybirth     DateTime? @db.Date

@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Post, } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Post, } from '@nestjs/common';
 import { UserService } from './user.service';
+import { user } from '@prisma/client';
 
 @Controller('user')
 export class UserController {
@@ -7,12 +8,16 @@ export class UserController {
 
 
   @Get("/getUser")
-  getUser(){
+  getUser(): Promise<user[]>{
     return this.userService.getUser()
   }
 
   @Post("/createUser")
   createUser(@Body() body){
-    return this.userService.createUser(body)
+    try {
+      return this.userService.createUser(body)
+    } catch (error) {
+      throw new error
+    }    
   }
 }
