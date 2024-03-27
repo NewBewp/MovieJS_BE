@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaClient, user } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import * as bcrypt from 'bcrypt'
+import { userLogin } from './entities/user.entities';
 @Injectable()
 export class UserService {
   prisma = new PrismaClient();
@@ -24,8 +25,7 @@ export class UserService {
     }
   }
 
-
-  async createUser(body) {
+  async createUser(body: user): Promise<user> {
     const hashedPassword = await bcrypt.hash(body.password,10);
     const userData = {...body, password: hashedPassword}
     try {
@@ -41,4 +41,13 @@ export class UserService {
       throw new HttpException('Failed to create user', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  // async validateUser(email: string, pass: string): Promise<userLogin>{
+  //   const userEmail = await this.userSer
+
+  //   if(){
+  //     return 
+  //   }
+  // }
+
 }
