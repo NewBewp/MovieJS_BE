@@ -1,23 +1,35 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaClient, user } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import * as bcrypt from 'bcrypt'
 @Injectable()
 export class UserService {
   prisma = new PrismaClient();
 
-  getUser(): Promise<user[]> {
-    const data = this.prisma.user.findMany({
-      include: {
-        role: true
+  async getUser(): Promise<user[]> {
+    try {
+      const data = this.prisma.user.findMany({
+        include: {
+          role: true
+        }
+      });
+      return data;
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        // Handle known errors here
+        throw new HttpException('A database error occurred', HttpStatus.INTERNAL_SERVER_ERROR);
       }
-    });
-    return data;
+      // Generic error handling
+      throw new HttpException('An unexpected error occurred', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
 
   async createUser(body) {
+    const hashedPassword = await bcrypt.hash(body.password,10);
+    const userData = {...body, password: hashedPassword}
     try {
-      const data = await this.prisma.user.create({ data: body });
+      const data = await this.prisma.user.create({ data: userData })
       return data;
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {

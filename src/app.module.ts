@@ -5,7 +5,6 @@ import { UserModule } from './user/user.module';
 import { RoleModule } from './role/role.module';
 import { ConfigModule } from '@nestjs/config';
 
-
 @Module({
   imports: [
     UserModule,
