@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaClient, user } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import * as bcrypt from 'bcrypt'
-import { userLogin } from './entities/user.entities';
+import { userLogin, userType } from './entities/user.entities';
 @Injectable()
 export class UserService {
   prisma = new PrismaClient();
@@ -42,12 +42,14 @@ export class UserService {
     }
   }
 
-  // async validateUser(email: string, pass: string): Promise<userLogin>{
-  //   const userEmail = await this.userSer
-
-  //   if(){
-  //     return 
-  //   }
-  // }
+  async validateUser(bodyLogin : userLogin): Promise<userType>{
+    const user = await this.prisma.user.findUnique({
+      where: {email: bodyLogin.email},
+    });
+    if(user && await bcrypt.compare(bodyLogin.password, user.password)){
+      return user as userType
+    }
+    return null
+  }
 
 }
