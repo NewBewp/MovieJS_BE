@@ -15,21 +15,18 @@ export class UserController {
     return this.userService.getUser()
   }
 
-  @Post("/createUser")
+  @Post("/register")
   @HttpCode(HttpStatus.CREATED)
   async createUser(@Body() body: userType): Promise<userType> {
     return this.userService.createUser(body);
   }
 
   @Post("/login")
-  async login(@Body() loginDetails: userLogin): Promise<{
-    message: string; userId: number
-  }> {
+  async login(@Body() loginDetails: userLogin): Promise<{message: string; userId: number}> {
     const user = await this.userService.validateUser(loginDetails);
     if (!user) {
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
     return { message: 'Login successful', userId: user.user_id };
   }
-
 }
